@@ -1,0 +1,6 @@
+D:\Workspace\SimplePack\SimplePack\bin\Debug\SimplePack.exe.config
+D:\Workspace\SimplePack\SimplePack\bin\Debug\SimplePack.exe
+D:\Workspace\SimplePack\SimplePack\bin\Debug\SimplePack.pdb
+D:\Workspace\SimplePack\SimplePack\obj\Debug\SimplePack.csprojResolveAssemblyReference.cache
+D:\Workspace\SimplePack\SimplePack\obj\Debug\SimplePack.exe
+D:\Workspace\SimplePack\SimplePack\obj\Debug\SimplePack.pdb
