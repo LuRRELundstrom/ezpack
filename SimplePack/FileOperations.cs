@@ -36,13 +36,11 @@ namespace SimplePack
         {
             if (args.Length > 0 && File.Exists(args[0]))
             {
-
                 foreach (var item in args)
                 {
                     string path = args[0];
                     using (StreamReader sr = new StreamReader(path))
                     {
-
                         //Prints parent folder of file, later used for renaming
                         string parentfolder = Directory.GetParent(item).Name;
                         string filename = Path.GetFileName(item);
@@ -55,7 +53,6 @@ namespace SimplePack
                         ParentFolder = parentfolder;
                     }
                 }
-
 
                 return ParentFolder;
             }
@@ -112,6 +109,5 @@ namespace SimplePack
 
             return true;
         }
-
     }
 }

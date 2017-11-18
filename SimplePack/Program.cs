@@ -22,17 +22,12 @@ namespace SimplePack
 {
     class Program
     {
-
-
         static void Main(string[] args)
         {
             Console.WriteLine("EZpack by LuRRE\n");
             FileOperations fo = new FileOperations();
             string init = fo.InitialInput(args);
             if (init != null) fo.Unrar(args);
-
         }
-
-
     }
 }
