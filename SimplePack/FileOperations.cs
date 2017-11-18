@@ -14,10 +14,10 @@ using System.Threading.Tasks;
 
 
     PARAMETERS:
-        ARGS[] = The string names of files started with APP.
-        ParentFolder = " "
-        FileName
-        FullPath
+        ARGS[] = The string array of files started with APP.
+        ParentFolder = to be determined
+        FileName = tbd
+        FullPath = tbd
 
     RETURN:
 
@@ -73,7 +73,7 @@ namespace SimplePack
 
                 foreach (var item in args)
                 {
-                    
+
                     string path = args[0];
                     using (StreamReader sr = new StreamReader(path))
                     {
@@ -87,15 +87,15 @@ namespace SimplePack
             catch (Exception e)
             {
                 Console.WriteLine("File already exists\n");
-                
+
             }
 
             finally
             {
-                
-            
-            Console.WriteLine("{0} archive(s) extracted.", extracted);
-            Console.ReadLine();
+
+
+                Console.WriteLine("{0} archive(s) extracted.", extracted);
+                Console.ReadLine();
             }
         }
 

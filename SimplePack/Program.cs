@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 /*
-	AUTHOR
+	AUTHOR: LuRRE
 
 
-	DESCRIPTION
+	DESCRIPTION:
+    Creates new FileOp object and checks for input args before initializing unzip.
 
 
-
-    PARAMETERS
+    PARAMETERS:
 
 
     RETURN
