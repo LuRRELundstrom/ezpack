@@ -2,7 +2,12 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
+using SharpCompress.Archive;
+using SharpCompress.Archive.Rar;
+using SharpCompress.Common;
 
 
 /*
@@ -53,7 +58,6 @@ namespace SimplePack
                         ParentFolder = parentfolder;
                     }
                 }
-
                 return ParentFolder;
             }
             Console.WriteLine("No input found.\nDrag and drop files onto ezpack.exe");
@@ -66,47 +70,44 @@ namespace SimplePack
             int extracted = 0;
             try
             {
-                CheckArgs(args);
-
+                if (!isArgs(args)) return;
                 foreach (var item in args)
                 {
-
                     string path = args[0];
                     using (StreamReader sr = new StreamReader(path))
                     {
-                        //Extract zip from item location to parent folder.
-                        ZipFile.ExtractToDirectory(item, ParentFolder);
-                        Console.WriteLine("Unpacking: {0}", FullPath);
+                        if (Path.GetExtension(item) == ".zip") ZipFile.ExtractToDirectory(item, ParentFolder);
+                        Console.WriteLine("Unpacking: {0}\n", FullPath);
                         extracted++;
+
+                        //if (Path.GetExtension(item) == ".rar") RarArchive.Open(sr)
                     }
+
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("File already exists\n");
+                Console.WriteLine("Error: File already exists\n + {0}", e);
 
             }
 
             finally
             {
-
-
                 Console.WriteLine("{0} archive(s) extracted.", extracted);
                 Console.ReadLine();
             }
         }
 
-        public bool CheckArgs(string[] args)
+        public bool isArgs(string[] args)
         {
             foreach (var item in args)
             {
-                if (Path.GetExtension(item) != ".zip")
+                if (Path.GetExtension(item) != ".zip" && Path.GetExtension(item)  != ".rar")
                 {
-                    Console.WriteLine("File extension must be .zip");
+                    Console.WriteLine("Error: File extension must be .zip or .rar");
                     return false;
                 }
             }
-
             return true;
         }
     }
