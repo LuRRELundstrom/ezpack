@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using SharpCompress.Archive;
-using SharpCompress.Archive.Rar;
-using SharpCompress.Common;
+using System.Xml.Serialization;
+using SharpCompress.Archives;
+using SharpCompress.Archives.Rar;
+using SharpCompress.Readers;
 
 
 /*
@@ -15,14 +15,15 @@ using SharpCompress.Common;
 
 
     DESCRIPTION:
-        Drag and drop items onto .exe to print parent folder name or await the drag and drop onto the console window ASYNC.
+        Class containing methods to Unrar, unzip, and various checks on input parameters ARGS[]. 
 
 
     PARAMETERS:
         ARGS[] = The string array of files started with APP.
-        ParentFolder = to be determined
-        FileName = tbd
-        FullPath = tbd
+        ParentFolder = parentfolder of archive, will change to list later
+        ArchivesExtracted = selfExplanatory
+        FilesExtracted = selfExplanatory
+        ListOfArchives = A list of all the archives of .rar or .zip to extract.
 
     RETURN:
 
@@ -30,85 +31,90 @@ using SharpCompress.Common;
 namespace SimplePack
 {
 
-    class FileOperations
+    internal class FileOperations
     {
         public string ParentFolder { get; set; }
-        public string FileName { get; set; }
+        public int FilesExtracted { get; set; }
+        public int ArchivesExtracted { get; set; }
 
-        public string FullPath { get; set; }
+        public List<string> ListOfArchives;
 
         public string InitialInput(string[] args)
         {
+            //Nullcheck
             if (args.Length > 0 && File.Exists(args[0]))
             {
-                foreach (var item in args)
-                {
-                    string path = args[0];
-                    using (StreamReader sr = new StreamReader(path))
-                    {
-                        //Prints parent folder of file, later used for renaming
-                        string parentfolder = Directory.GetParent(item).Name;
-                        string filename = Path.GetFileName(item);
-                        string fullpath = Path.GetFullPath(item);
-                        Console.WriteLine("Extracting {1} to {0}", parentfolder, filename);
-                        Console.WriteLine("Extension: {0}\n", Path.GetExtension(item));
-                        //Saving strings to respective properties
-                        FullPath = fullpath;
-                        FileName = filename;
-                        ParentFolder = parentfolder;
-                    }
-                }
+                //Saving command line inputs to list for later iteration.
+                ListOfArchives = args.ToList();
+                ParentFolder = Directory.GetParent(args[0]).Name;
                 return ParentFolder;
             }
             Console.WriteLine("No input found.\nDrag and drop files onto ezpack.exe");
             Console.ReadKey();
             return null;
         }
-
-        public void Unrar(string[] args)
+        //Extracting .ZIP without overwrite permission
+        public void Unzip(string[] args)
         {
-            int extracted = 0;
             try
-            {
-                if (!isArgs(args)) return;
-                foreach (var item in args)
+            {   //Fetch string value from array because SR can't be of type string[]
+                string path = args[0];
+                using (var sr = new StreamReader(path))
                 {
-                    string path = args[0];
-                    using (StreamReader sr = new StreamReader(path))
+                    foreach (var item in args)
                     {
-                        if (Path.GetExtension(item) == ".zip") ZipFile.ExtractToDirectory(item, ParentFolder);
-                        Console.WriteLine("Unpacking: {0}\n", FullPath);
-                        extracted++;
-
-                        //if (Path.GetExtension(item) == ".rar") RarArchive.Open(sr)
+                        {
+                            Console.WriteLine("Extracting: {0}", item);
+                            if (Path.GetExtension(item) == ".zip" && Path.GetFileName(item) != null) ZipFile.ExtractToDirectory(item, ParentFolder);
+                            FilesExtracted++;
+                            //ArchivesExtracted++;
+                        }
                     }
-
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error: File already exists\n + {0}", e);
-
             }
 
             finally
             {
-                Console.WriteLine("{0} archive(s) extracted.", extracted);
+                Console.WriteLine("\n{0} file(s) extracted.", FilesExtracted);
                 Console.ReadLine();
             }
         }
 
-        public bool isArgs(string[] args)
+        //Extracting .RAR with overwrite permission
+        public void Unrar(string[] args)
         {
-            foreach (var item in args)
+            string path = args[0];
+            using (var archive = RarArchive.Open(path))
             {
-                if (Path.GetExtension(item) != ".zip" && Path.GetExtension(item)  != ".rar")
+                foreach (var item in archive.Entries)
                 {
-                    Console.WriteLine("Error: File extension must be .zip or .rar");
-                    return false;
+                    Console.WriteLine("Extracting: {0}", item);
+                    item.WriteToDirectory(ParentFolder, new ExtractionOptions() { Overwrite = true, ExtractFullPath = true });
+                    FilesExtracted++;
+                    ArchivesExtracted++;
                 }
             }
-            return true;
+
+            Console.WriteLine("{0} file(s) in {1} archive(s) extracted.", FilesExtracted, ArchivesExtracted);
+            Console.ReadLine();
+        }
+
+        //Iterates archives to verify the correct extraction method
+        public void DetermineExtract(string[] args)
+        {
+            //Zip iteration LINQ
+            if (args.Any(item => Path.GetExtension(item) == ".zip")) Unzip(args);
+            //Rar iteration LINQ 
+            else if (args.Any(item => Path.GetExtension(item) == ".rar" || Path.GetExtension(item) == ".r00")) Unrar(args);
+            else
+            {
+                Console.WriteLine("Error: File extension must be .zip or .rar");
+                Console.ReadLine();
+            }
         }
     }
 }

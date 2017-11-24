@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 /*
 	AUTHOR: LuRRE
@@ -20,14 +16,14 @@ using System.Threading.Tasks;
 */
 namespace SimplePack
 {
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
             Console.WriteLine("EZpack by LuRRE\n");
-            FileOperations fo = new FileOperations();
-            string init = fo.InitialInput(args);
-            if (init != null) fo.Unrar(args);
+            var fileOp = new FileOperations();
+            var init = fileOp.InitialInput(args);
+            if (init != null) fileOp.DetermineExtract(args);
         }
     }
 }
