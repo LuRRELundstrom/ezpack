@@ -7,7 +7,7 @@ D:\Workspace\SimplePack\SimplePack\obj\Debug\SimplePack.pdb
 D:\source\repos\ezpack\SimplePack\bin\Debug\SimplePack.exe.config
 D:\source\repos\ezpack\SimplePack\bin\Debug\SimplePack.exe
 D:\source\repos\ezpack\SimplePack\bin\Debug\SimplePack.pdb
-D:\source\repos\ezpack\SimplePack\obj\Debug\SimplePack.csprojResolveAssemblyReference.cache
 D:\source\repos\ezpack\SimplePack\obj\Debug\SimplePack.csproj.CoreCompileInputs.cache
 D:\source\repos\ezpack\SimplePack\obj\Debug\SimplePack.exe
 D:\source\repos\ezpack\SimplePack\obj\Debug\SimplePack.pdb
+D:\source\repos\ezpack\SimplePack\obj\Debug\SimplePack.csprojResolveAssemblyReference.cache
