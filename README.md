@@ -1,7 +1,7 @@
-## ezpack
+# ezpack
 Drag &amp; Drop console app for unpacking compressed files.
 
-# Todo
+## Todo
 
 * Change Projectname, namespace etc.
 * Command-line input even after start.
@@ -9,7 +9,7 @@ Drag &amp; Drop console app for unpacking compressed files.
 * Zip overwrite permission.
 * ExceptionHandlers.
 
-# Changelog
+## Changelog
 
 # 0.1.0.21401
 * Multi zip-support.
