@@ -11,6 +11,6 @@ Drag &amp; Drop console app for unpacking compressed files.
 
 ## Changelog
 
-# 0.1.0.21401
+## 0.1.0.21401
 * Multi zip-support.
 * Multi, multi-volume rar support. (FileAccess overwrite)
