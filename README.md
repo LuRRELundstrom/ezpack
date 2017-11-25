@@ -1,7 +1,7 @@
 # ezpack
 Drag &amp; Drop console app for unpacking compressed files.
 
-#TODO
+# TODO
 
 - Change Projectname, namespace etc.
 - Command-line input even after start.
