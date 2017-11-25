@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Xml.Serialization;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Readers;
@@ -37,15 +34,11 @@ namespace SimplePack
         public int FilesExtracted { get; set; }
         public int ArchivesExtracted { get; set; }
 
-        public List<string> ListOfArchives;
-
         public string InitialInput(string[] args)
         {
             //Nullcheck
             if (args.Length > 0 && File.Exists(args[0]))
             {
-                //Saving command line inputs to list for later iteration.
-                ListOfArchives = args.ToList();
                 ParentFolder = Directory.GetParent(args[0]).Name;
                 return ParentFolder;
             }
@@ -54,22 +47,22 @@ namespace SimplePack
             return null;
         }
         //Extracting .ZIP without overwrite permission
-        public void Unzip(string[] args)
+        public void Unzip(string[] zipFiles)
         {
             try
-            {   //Fetch string value from array because SR can't be of type string[]
-                string path = args[0];
-                using (var sr = new StreamReader(path))
+            {
+                foreach (var file in zipFiles)
                 {
-                    foreach (var item in args)
+                    ParentFolder = Directory.GetParent(file).Name;
+                    using (var sr = new StreamReader(file))
                     {
                         {
-                            Console.WriteLine("Extracting: {0}", item);
-                            if (Path.GetExtension(item) == ".zip" && Path.GetFileName(item) != null) ZipFile.ExtractToDirectory(item, ParentFolder);
+                            Console.WriteLine("Extracting: {0}", file);
+                            ZipFile.ExtractToDirectory(file, ParentFolder);
                             FilesExtracted++;
-                            //ArchivesExtracted++;
                         }
                     }
+                    ArchivesExtracted++;
                 }
             }
             catch (Exception e)
@@ -79,26 +72,29 @@ namespace SimplePack
 
             finally
             {
-                Console.WriteLine("\n{0} file(s) extracted.", FilesExtracted);
+                Console.WriteLine("{0} file(s) in {1} archive(s) extracted.", FilesExtracted, ArchivesExtracted);
                 Console.ReadLine();
             }
         }
 
         //Extracting .RAR with overwrite permission
-        public void Unrar(string[] args)
+        public void Unrar(string[] rarFiles)
         {
-            string path = args[0];
-            using (var archive = RarArchive.Open(path))
+            foreach (var archive in rarFiles)
             {
-                foreach (var item in archive.Entries)
+                //Set extraction path for each archive.
+                ParentFolder = Directory.GetParent(archive).Name;
+                using (var openrar = RarArchive.Open(archive))
                 {
-                    Console.WriteLine("Extracting: {0}", item);
-                    item.WriteToDirectory(ParentFolder, new ExtractionOptions() { Overwrite = true, ExtractFullPath = true });
-                    FilesExtracted++;
-                    ArchivesExtracted++;
+                    foreach (var item in openrar.Entries)
+                    {
+                        item.WriteToDirectory(ParentFolder, new ExtractionOptions() { Overwrite = true, ExtractFullPath = true });
+                        FilesExtracted++;
+                    }
                 }
+                Console.WriteLine("Extracting: {0}", archive);
+                ArchivesExtracted++;
             }
-
             Console.WriteLine("{0} file(s) in {1} archive(s) extracted.", FilesExtracted, ArchivesExtracted);
             Console.ReadLine();
         }
@@ -115,6 +111,6 @@ namespace SimplePack
                 Console.WriteLine("Error: File extension must be .zip or .rar");
                 Console.ReadLine();
             }
-        }
+        } 
     }
 }
