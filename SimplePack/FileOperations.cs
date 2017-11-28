@@ -30,11 +30,17 @@ namespace SimplePack
 
     internal class FileOperations
     {
+
+        //Auto-property fields
         public string ParentFolder { get; set; }
         public int FilesExtracted { get; set; }
         public int ArchivesExtracted { get; set; }
+        public long TotalSize { get; set; }
+        public long SizeRead { get; set; }
+        public ArchiveExtension ArchiveExtension { get; set; }
 
-        public string InitialInput(string[] args)
+        
+        public string CheckInput(string[] args)
         {
             //Nullcheck
             if (args.Length > 0 && File.Exists(args[0]))
@@ -53,15 +59,17 @@ namespace SimplePack
             {
                 foreach (var file in zipFiles)
                 {
+                    //Set extraction path for each archive
                     ParentFolder = Directory.GetParent(file).Name;
-                    using (var sr = new StreamReader(file))
-                    {
-                        {
+                    //using (var sr = new StreamReader(file))
+                    //{
+                    //    {
+                            
                             Console.WriteLine("Extracting: {0}", file);
                             ZipFile.ExtractToDirectory(file, ParentFolder);
                             FilesExtracted++;
-                        }
-                    }
+                    //    }
+                    //}
                     ArchivesExtracted++;
                 }
             }
@@ -72,8 +80,7 @@ namespace SimplePack
 
             finally
             {
-                Console.WriteLine("{0} file(s) in {1} archive(s) extracted.", FilesExtracted, ArchivesExtracted);
-                Console.ReadLine();
+                PrintExtracted();
             }
         }
 
@@ -90,27 +97,82 @@ namespace SimplePack
                     {
                         item.WriteToDirectory(ParentFolder, new ExtractionOptions() { Overwrite = true, ExtractFullPath = true });
                         FilesExtracted++;
+                        //Console.Clear();
+                        //Console.WriteLine("Extracting: {0}", archive);
                     }
                 }
-                Console.WriteLine("Extracting: {0}", archive);
                 ArchivesExtracted++;
             }
-            Console.WriteLine("{0} file(s) in {1} archive(s) extracted.", FilesExtracted, ArchivesExtracted);
-            Console.ReadLine();
+            PrintExtracted();
         }
 
-        //Iterates archives to verify the correct extraction method
-        public void DetermineExtract(string[] args)
+        //Iterates archives to verify that they are compatible
+        public void ValidateFiles(string[] args)
         {
             //Zip iteration LINQ
-            if (args.Any(item => Path.GetExtension(item) == ".zip")) Unzip(args);
+            if (args.All(item => Path.GetExtension(item) == ".zip"))
+            {
+                ArchiveExtension = ArchiveExtension.Zip;
+            }
             //Rar iteration LINQ 
-            else if (args.Any(item => Path.GetExtension(item) == ".rar" || Path.GetExtension(item) == ".r00")) Unrar(args);
+            else if (args.All(item => Path.GetExtension(item) == ".rar" || Path.GetExtension(item) == ".r00"))
+            {
+                ArchiveExtension = ArchiveExtension.Rar;
+            }
             else
             {
-                Console.WriteLine("Error: File extension must be .zip or .rar");
-                Console.ReadLine();
+                ArchiveExtension = ArchiveExtension.Invalid;
             }
-        } 
+        }
+
+        //Determines which method to use for extraction
+        public void DetermineExtract(string[] args)
+        {
+            switch (ArchiveExtension)
+            {
+                case ArchiveExtension.Rar:
+                    CalculateSize(args);
+                    Unrar(args);
+                    break;
+                case ArchiveExtension.Zip:
+                    CalculateSize(args);
+                    Unzip(args);
+                    break;
+                case ArchiveExtension.Invalid:
+                    Console.WriteLine("File Extension must be .zip or .rar");
+                    Console.ReadLine();
+                    //throw new FileNotFoundException("Error: File extension must be .zip or .rar");
+                    break;
+            }
+        }
+
+        public void CalculateSize(string[] files)
+        {
+            foreach (var file in files)
+            {
+                var f = new FileInfo(file);
+                TotalSize += f.Length;
+            }
+        }
+
+        public void PrintSize()
+        {
+            Console.WriteLine("Total size: {0} byte", TotalSize);
+        }
+
+        public void PrintExtracted()
+        {
+            Console.WriteLine("{0} file(s) in {1} archive(s) extracted.", FilesExtracted, ArchivesExtracted);
+            Console.ReadLine();
+
+        }
+    }
+
+    //Compatible extensions
+    enum ArchiveExtension
+    {
+        Zip,
+        Rar,
+        Invalid
     }
 }

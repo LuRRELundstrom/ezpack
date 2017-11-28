@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 /*
 	AUTHOR: LuRRE
@@ -21,9 +22,10 @@ namespace SimplePack
         static void Main(string[] args)
         {
             Console.WriteLine("EZpack by LuRRE\n");
-            var fileOp = new FileOperations();
-            var init = fileOp.InitialInput(args);
-            if (init != null) fileOp.DetermineExtract(args);
+            var init = new FileOperations();            
+            init.CheckInput(args);
+            init.ValidateFiles(args);
+            init.DetermineExtract(args);
         }
     }
 }
