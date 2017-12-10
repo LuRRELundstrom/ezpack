@@ -14,7 +14,6 @@ using SharpCompress.Writers.Zip;
 /*
     AUTHOR: LuRRE
 
-    test
     DESCRIPTION:
         Class containing methods to Unrar, unzip, and various checks on input parameters ARGS[]. 
 
