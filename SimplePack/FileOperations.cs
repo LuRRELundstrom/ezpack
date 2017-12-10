@@ -185,6 +185,7 @@ namespace EZpack
             return TotalSize;
         }
 
+        //Todo Fix PrintSize bug
         public void PrintSize()
         {
             //bytes to kilobytes

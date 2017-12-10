@@ -15,7 +15,8 @@ A beginners learning project.
    
 ### Known issues
 * Corrupt or fake files throw an exception.
-
+* Filesize printer inconsistent.
+* Simultaneous rar and zip extraction not working.
 
 ### 0.1.3 
 * Filter and print excluded files.
