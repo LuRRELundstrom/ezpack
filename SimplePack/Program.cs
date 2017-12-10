@@ -15,7 +15,7 @@ using System.IO;
     RETURN
 
 */
-namespace SimplePack
+namespace EZpack
 {
     internal class Program
     {

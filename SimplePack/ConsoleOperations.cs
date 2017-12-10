@@ -1,4 +1,4 @@
-﻿namespace SimplePack
+﻿namespace EZpack
 {
     public class ConsoleOperations
     {

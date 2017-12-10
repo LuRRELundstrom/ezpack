@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplePack", "SimplePack\SimplePack.csproj", "{96536BC9-9074-48A3-BD29-511A6A284DA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZpack", "SimplePack\EZpack.csproj", "{96536BC9-9074-48A3-BD29-511A6A284DA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,10 +20,10 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UpdateAssemblyVersion = True
-		BuildVersion_BuildVersioningStyle = None.None.YearMonthDayStamp.Increment
-		BuildVersion_BuildAction = Build
-		BuildVersion_StartDate = 2017/11/24
 		SolutionGuid = {6595D397-D069-4219-AA9B-3106370F045A}
+		BuildVersion_StartDate = 2017/11/24
+		BuildVersion_BuildAction = Build
+		BuildVersion_BuildVersioningStyle = None.None.YearMonthDayStamp.Increment
+		BuildVersion_UpdateAssemblyVersion = True
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -17,59 +18,63 @@ using SharpCompress.Readers;
 
     PARAMETERS:
         ARGS[] = The string array of files started with APP.
-        ParentFolder = parentfolder of archive, will change to list later
+        TempParent = parentfolder of archive, will change to list later
         ArchivesExtracted = selfExplanatory
         FilesExtracted = selfExplanatory
-        ListOfArchives = A list of all the archives of .rar or .zip to extract.
+        ValidRar = Checked for .rar 
+        ValidZip = Checked for .zip
 
     RETURN:
 
 */
-namespace SimplePack
+namespace EZpack
 {
-
+    //Compatible extensions. Default value (invalid) is always first!
+    internal enum ArchiveExtension
+    {
+        Invalid,
+        Zip,
+        Rar,
+    }
     internal class FileOperations
     {
 
         //Auto-property fields
-        public string ParentFolder { get; set; }
+        public string TempParent { get; set; }
         public int FilesExtracted { get; set; }
         public int ArchivesExtracted { get; set; }
         public long TotalSize { get; set; }
         public long SizeRead { get; set; }
+        public string[] ValidRar { get; set; }
+        public string[] ValidZip { get; set; }
         public ArchiveExtension ArchiveExtension { get; set; }
-
         
+
         public string CheckInput(string[] args)
         {
             //Nullcheck
-            if (args.Length > 0 && File.Exists(args[0]))
+
+            if (args.Length > 0 && args.All(File.Exists))
             {
-                ParentFolder = Directory.GetParent(args[0]).Name;
-                return ParentFolder;
+                TempParent = Directory.GetParent(args[0]).Name;
+                return TempParent;
             }
             Console.WriteLine("No input found.\nDrag and drop files onto ezpack.exe");
             Console.ReadKey();
             return null;
         }
         //Extracting .ZIP without overwrite permission
+        //TODO Overwrite permission
         public void Unzip(string[] zipFiles)
         {
             try
             {
                 foreach (var file in zipFiles)
                 {
-                    //Set extraction path for each archive
-                    ParentFolder = Directory.GetParent(file).Name;
-                    //using (var sr = new StreamReader(file))
-                    //{
-                    //    {
-                            
-                            Console.WriteLine("Extracting: {0}", file);
-                            ZipFile.ExtractToDirectory(file, ParentFolder);
-                            FilesExtracted++;
-                    //    }
-                    //}
+                    TempParent = Directory.GetParent(file).Name;
+                    Console.WriteLine("Extracting: {0}", file);
+                    ZipFile.ExtractToDirectory(file, TempParent);
+                    FilesExtracted++;
                     ArchivesExtracted++;
                 }
             }
@@ -90,15 +95,13 @@ namespace SimplePack
             foreach (var archive in rarFiles)
             {
                 //Set extraction path for each archive.
-                ParentFolder = Directory.GetParent(archive).Name;
+                TempParent = Directory.GetParent(archive).Name;
                 using (var openrar = RarArchive.Open(archive))
                 {
                     foreach (var item in openrar.Entries)
                     {
-                        item.WriteToDirectory(ParentFolder, new ExtractionOptions() { Overwrite = true, ExtractFullPath = true });
+                        item.WriteToDirectory(TempParent, new ExtractionOptions() { Overwrite = true, ExtractFullPath = true });
                         FilesExtracted++;
-                        //Console.Clear();
-                        //Console.WriteLine("Extracting: {0}", archive);
                     }
                 }
                 ArchivesExtracted++;
@@ -106,16 +109,32 @@ namespace SimplePack
             PrintExtracted();
         }
 
-        //Iterates archives to verify that they are compatible
+        //Iterates all archives to verify that they are compatible
         public void ValidateFiles(string[] args)
         {
+
+            //Sort files into lists of RAR and ZIP to save for extraction
+            ValidRar = Array.FindAll(args, f => Path.GetExtension(f) == ".rar" || Path.GetExtension(f) == ".r00");
+            ValidZip = Array.FindAll(args, f => Path.GetExtension(f) == ".zip");
+
+                    /*Alternative solutions
+           
+                     1.   var ValidRar = (from item in args
+                                        where Path.GetExtension(item) == ".rar" || Path.GetExtension(item) == ".r00"
+                                        select item).ToArray();
+
+                     2.   var ValidZip = args
+                            .Where(item => Path.GetExtension(item) == ".rar" || Path.GetExtension(item) == ".r00")
+                            .ToArray();
+                    */
+
             //Zip iteration LINQ
-            if (args.All(item => Path.GetExtension(item) == ".zip"))
+            if (ValidZip != null)
             {
                 ArchiveExtension = ArchiveExtension.Zip;
             }
             //Rar iteration LINQ 
-            else if (args.All(item => Path.GetExtension(item) == ".rar" || Path.GetExtension(item) == ".r00"))
+            else if (ValidRar != null)
             {
                 ArchiveExtension = ArchiveExtension.Rar;
             }
@@ -131,12 +150,14 @@ namespace SimplePack
             switch (ArchiveExtension)
             {
                 case ArchiveExtension.Rar:
-                    CalculateSize(args);
-                    Unrar(args);
+                    CalculateSize(ValidRar);
+                    PrintSize();
+                    Unrar(ValidRar);
                     break;
                 case ArchiveExtension.Zip:
-                    CalculateSize(args);
-                    Unzip(args);
+                    CalculateSize(ValidZip);
+                    PrintSize();
+                    Unzip(ValidZip);
                     break;
                 case ArchiveExtension.Invalid:
                     Console.WriteLine("File Extension must be .zip or .rar");
@@ -146,18 +167,21 @@ namespace SimplePack
             }
         }
 
-        public void CalculateSize(string[] files)
+        public long CalculateSize(string[] files)
         {
             foreach (var file in files)
             {
                 var f = new FileInfo(file);
                 TotalSize += f.Length;
             }
+            return TotalSize;
         }
 
         public void PrintSize()
         {
-            Console.WriteLine("Total size: {0} byte", TotalSize);
+            //bytes to kilobytes
+            TotalSize = TotalSize / 1000;
+            Console.WriteLine("Total size: {0} kb", TotalSize);
         }
 
         public void PrintExtracted()
@@ -166,13 +190,5 @@ namespace SimplePack
             Console.ReadLine();
 
         }
-    }
-
-    //Compatible extensions
-    enum ArchiveExtension
-    {
-        Zip,
-        Rar,
-        Invalid
     }
 }

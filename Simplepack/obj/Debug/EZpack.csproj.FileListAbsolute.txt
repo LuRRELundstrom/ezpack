@@ -1,0 +1,14 @@
+D:\source\repos\ezpack\EZpack\bin\Debug\SimplePack.exe.config
+D:\source\repos\ezpack\EZpack\bin\Debug\SimplePack.exe
+D:\source\repos\ezpack\EZpack\bin\Debug\SimplePack.pdb
+D:\source\repos\ezpack\EZpack\obj\Debug\EZpack.csprojResolveAssemblyReference.cache
+D:\source\repos\ezpack\EZpack\obj\Debug\EZpack.csproj.CoreCompileInputs.cache
+D:\source\repos\ezpack\EZpack\obj\Debug\SimplePack.exe
+D:\source\repos\ezpack\EZpack\obj\Debug\SimplePack.pdb
+D:\source\repos\ezpack\SimplePack\obj\Debug\EZpack.csprojResolveAssemblyReference.cache
+D:\source\repos\ezpack\SimplePack\obj\Debug\EZpack.csproj.CoreCompileInputs.cache
+D:\source\repos\ezpack\SimplePack\bin\Debug\EZpack.exe.config
+D:\source\repos\ezpack\SimplePack\bin\Debug\EZpack.exe
+D:\source\repos\ezpack\SimplePack\bin\Debug\EZpack.pdb
+D:\source\repos\ezpack\SimplePack\obj\Debug\EZpack.exe
+D:\source\repos\ezpack\SimplePack\obj\Debug\EZpack.pdb
