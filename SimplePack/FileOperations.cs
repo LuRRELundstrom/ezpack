@@ -71,7 +71,7 @@ namespace EZpack
         {
             foreach (var archive in zipFiles)
             {
-                Console.WriteLine($"Extracting: {archive}\n");
+                PrintExtracting(archive);
                 TempParent = Directory.GetParent(archive).Name;
                 using (var openZip = ZipFile.OpenRead(archive))
                 {
@@ -96,6 +96,7 @@ namespace EZpack
         {
             foreach (var archive in rarFiles)
             {
+                PrintExtracting(archive);
                 //Set extraction path for each archive.
                 TempParent = Directory.GetParent(archive).Name;
                 using (var openrar = RarArchive.Open(archive))
@@ -114,9 +115,7 @@ namespace EZpack
         //Iterates all archives to verify that they are compatible
         public void ValidateFiles(string[] args)
         {
-            //Todo Fix rar bug - Something to do with the file sorting and Extension.
-            //Todo Sort all excluded files to print
-            //Sort files into lists of RAR and ZIP to save for extraction
+            //Sort files into arrays of  valid RAR and ZIP to save for extraction
             ValidRar = Array.FindAll(args, f => Path.GetExtension(f) == ".rar" || Path.GetExtension(f) == ".r00");
             ValidZip = Array.FindAll(args, f => Path.GetExtension(f) == ".zip");
             ExcludedFiles = Array.FindAll(args, f => Path.GetExtension(f) != ".zip" ||
@@ -135,12 +134,11 @@ namespace EZpack
                             .ToArray();
                     */
 
-            //Zip iteration LINQ
+            //Setting extraction state
             if (ValidZip.Length > 0)
             {
                 ArchiveExtension = ArchiveExtension.Zip;
             }
-            //Rar iteration LINQ 
             else if (ValidRar.Length > 0)
             {
                 ArchiveExtension = ArchiveExtension.Rar;
@@ -160,11 +158,13 @@ namespace EZpack
                     CalculateSize(ValidRar);
                     PrintSize();
                     Unrar(ValidRar);
+                    PrintExcluded();
                     break;
                 case ArchiveExtension.Zip:
                     CalculateSize(ValidZip);
                     PrintSize();
                     Unzip(ValidZip);
+                    PrintExcluded();
                     break;
                 case ArchiveExtension.Invalid:
                     Console.WriteLine("File Extension must be .zip or .rar");
@@ -207,6 +207,11 @@ namespace EZpack
             {
                 Console.WriteLine(item);
             }
+        }
+
+        public void PrintExtracting(string file)
+        {
+            Console.WriteLine($"Extracting: {file}");
         }
     }
 }

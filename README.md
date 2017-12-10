@@ -1,5 +1,5 @@
 # ezpack
-Drag &amp; Drop console app for decompressing files.
+Drag &amp; Drop console app for decompressing files.  
 A beginners learning project.
 
 ## Todo
@@ -25,6 +25,7 @@ A beginners learning project.
 * Added Overwrite permission for Zip extraction(fixed file exists exception).
 * Filtering of input parameters.
 * Changed Projectname.
+* Rar temporary disabled.
 
 ### 0.1.1
 * Added Multi zip-support.
