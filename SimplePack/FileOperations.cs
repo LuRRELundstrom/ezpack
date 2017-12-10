@@ -3,15 +3,18 @@ using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Readers;
+using SharpCompress.Readers.Zip;
+using SharpCompress.Writers.Zip;
 
 
 /*
     AUTHOR: LuRRE
 
-
+    test
     DESCRIPTION:
         Class containing methods to Unrar, unzip, and various checks on input parameters ARGS[]. 
 
@@ -48,6 +51,7 @@ namespace EZpack
         public string[] ValidRar { get; set; }
         public string[] ValidZip { get; set; }
         public ArchiveExtension ArchiveExtension { get; set; }
+        public string[] FilesExcluded { get; set; }
         
 
         public string CheckInput(string[] args)
@@ -63,30 +67,29 @@ namespace EZpack
             Console.ReadKey();
             return null;
         }
-        //Extracting .ZIP without overwrite permission
-        //TODO Overwrite permission
+        //Extracting .ZIP with overwrite permission
         public void Unzip(string[] zipFiles)
         {
-            try
+            foreach (var archive in zipFiles)
             {
-                foreach (var file in zipFiles)
+                Console.WriteLine($"Extracting: {archive}\n");
+                TempParent = Directory.GetParent(archive).Name;
+                using (var openZip = ZipFile.OpenRead(archive))
                 {
-                    TempParent = Directory.GetParent(file).Name;
-                    Console.WriteLine("Extracting: {0}", file);
-                    ZipFile.ExtractToDirectory(file, TempParent);
-                    FilesExtracted++;
-                    ArchivesExtracted++;
+                    foreach (var item in openZip.Entries)
+                    {
+                        if (!File.Exists(TempParent))
+                        {
+                            Directory.CreateDirectory(TempParent);
+                        }
+                        var newPath = Path.Combine(TempParent, item.ToString());
+                        item.ExtractToFile(newPath, overwrite: true);
+                        FilesExtracted++;
+                    }
                 }
+                ArchivesExtracted++;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: File already exists\n + {0}", e);
-            }
-
-            finally
-            {
-                PrintExtracted();
-            }
+            PrintExtracted();
         }
 
         //Extracting .RAR with overwrite permission
@@ -112,10 +115,12 @@ namespace EZpack
         //Iterates all archives to verify that they are compatible
         public void ValidateFiles(string[] args)
         {
-
+            //Todo Fix rar bug - Something to do with the file sorting and Extension.
+            //Todo Sort all excluded files to print
             //Sort files into lists of RAR and ZIP to save for extraction
             ValidRar = Array.FindAll(args, f => Path.GetExtension(f) == ".rar" || Path.GetExtension(f) == ".r00");
             ValidZip = Array.FindAll(args, f => Path.GetExtension(f) == ".zip");
+            
 
                     /*Alternative solutions
            
@@ -189,6 +194,15 @@ namespace EZpack
             Console.WriteLine("{0} file(s) in {1} archive(s) extracted.", FilesExtracted, ArchivesExtracted);
             Console.ReadLine();
 
+        }
+
+        public void PrintExcluded()
+        {
+            Console.WriteLine("Following file(s) are not eligible for extraction:\n");
+            foreach (var item in FilesExcluded)
+            {
+                Console.WriteLine(item);
+            }
         }
     }
 }

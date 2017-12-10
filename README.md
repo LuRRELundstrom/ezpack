@@ -1,16 +1,20 @@
 # ezpack
-Drag &amp; Drop console app for unpacking compressed files.
+Drag &amp; Drop console app for decompressing files.
 
 ## Todo
 
-* Change Projectname, namespace etc.
 * Command-line input even after start.
-* Progress bar.
-* Zip overwrite permission.
+* Progress tracking.
 * ExceptionHandlers.
 
 ## Changelog
 
-## 0.1.0.21401
+### 0.1.2
+* Zip overwrite permission.
+* Changed Projectname
+- Issues:
+- Broke .rar support
+
+### 0.1.1
 * Multi zip-support.
 * Multi, multi-volume rar support. (FileAccess overwrite)
