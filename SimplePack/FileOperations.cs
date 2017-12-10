@@ -50,7 +50,7 @@ namespace EZpack
         public string[] ValidRar { get; set; }
         public string[] ValidZip { get; set; }
         public ArchiveExtension ArchiveExtension { get; set; }
-        public string[] FilesExcluded { get; set; }
+        public string[] ExcludedFiles { get; set; }
         
 
         public string CheckInput(string[] args)
@@ -63,7 +63,7 @@ namespace EZpack
                 return TempParent;
             }
             Console.WriteLine("No input found.\nDrag and drop files onto ezpack.exe");
-            Console.ReadKey();
+            Console.ReadLine();
             return null;
         }
         //Extracting .ZIP with overwrite permission
@@ -119,7 +119,10 @@ namespace EZpack
             //Sort files into lists of RAR and ZIP to save for extraction
             ValidRar = Array.FindAll(args, f => Path.GetExtension(f) == ".rar" || Path.GetExtension(f) == ".r00");
             ValidZip = Array.FindAll(args, f => Path.GetExtension(f) == ".zip");
-            
+            ExcludedFiles = Array.FindAll(args, f => Path.GetExtension(f) != ".zip" ||
+                                                     Path.GetExtension(f) != ".r00" ||
+                                                     Path.GetExtension(f) != ".rar");
+           
 
                     /*Alternative solutions
            
@@ -133,12 +136,12 @@ namespace EZpack
                     */
 
             //Zip iteration LINQ
-            if (ValidZip != null)
+            if (ValidZip.Length > 0)
             {
                 ArchiveExtension = ArchiveExtension.Zip;
             }
             //Rar iteration LINQ 
-            else if (ValidRar != null)
+            else if (ValidRar.Length > 0)
             {
                 ArchiveExtension = ArchiveExtension.Rar;
             }
@@ -165,6 +168,7 @@ namespace EZpack
                     break;
                 case ArchiveExtension.Invalid:
                     Console.WriteLine("File Extension must be .zip or .rar");
+                    PrintExcluded();
                     Console.ReadLine();
                     //throw new FileNotFoundException("Error: File extension must be .zip or .rar");
                     break;
@@ -197,8 +201,9 @@ namespace EZpack
 
         public void PrintExcluded()
         {
+            if (ExcludedFiles.Length == 0) return;
             Console.WriteLine("Following file(s) are not eligible for extraction:\n");
-            foreach (var item in FilesExcluded)
+            foreach (var item in ExcludedFiles)
             {
                 Console.WriteLine(item);
             }

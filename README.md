@@ -7,19 +7,24 @@ A beginners learning project.
 * Command-line input post startup.
 * Progress tracking.
 * ExceptionHandlers.
-* Port to Async with events
-* GUI
+* Port to Async with events.
+* GUI.
+* Extraction queue.
 
 ## Changelog
    
+### Known issues
+* Corrupt or fake files throw an exception.
+
+
+### 0.1.3 
+* Filter and print excluded files.
+* Rar enabled.
 
 ### 0.1.2
 * Added Overwrite permission for Zip extraction(fixed file exists exception).
 * Filtering of input parameters.
-* Filter excluded files.
 * Changed Projectname.
-Issues:
-Rar temporary disabled.
 
 ### 0.1.1
 * Added Multi zip-support.
