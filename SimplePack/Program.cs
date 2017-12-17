@@ -19,6 +19,8 @@ namespace EZpack
 {
     internal class Program
     {
+        
+
         static void Main(string[] args)
         {
             Console.WriteLine("EZpack by LuRRE\n");

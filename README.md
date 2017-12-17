@@ -1,6 +1,6 @@
 # ezpack
 Drag &amp; Drop console app for decompressing files.  
-A beginners learning project.
+A beginners learning project, using SharpCompress.
 
 ## Todo
 
@@ -9,14 +9,18 @@ A beginners learning project.
 * ExceptionHandlers.
 * Port to Async with events.
 * GUI.
-* Extraction queue.
+* Extraction queue.(Fixing simultaneous extracting.)
 
 ## Changelog
    
 ### Known issues
-* Corrupt or fake files throw an exception.
-* Filesize printer inconsistent.
 * Simultaneous rar and zip extraction not working.
+
+
+### 0.1.4
+* Corrupt files throw an exception and exits without crashing.
+* Valid extensions are no longer case sensitive.
+* Fixed printsize inconsistency.
 
 ### 0.1.3 
 * Filter and print excluded files.
