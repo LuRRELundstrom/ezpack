@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZpack", "SimplePack\EZpack.csproj", "{96536BC9-9074-48A3-BD29-511A6A284DA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZpack", "ezpack\EZpack.csproj", "{96536BC9-9074-48A3-BD29-511A6A284DA1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB561DD2-EEFF-48A4-A694-7CEFD38CC40A}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,7 +25,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_AssemblyInfoFilename = Simplepack\Properties\AssemblyInfo.cs
+		BuildVersion_AssemblyInfoFilename = ezpack\Properties\AssemblyInfo.cs
 		BuildVersion_UpdateAssemblyVersion = True
 		BuildVersion_BuildVersioningStyle = None.None.Increment.None
 		BuildVersion_BuildAction = Build
