@@ -4,7 +4,7 @@ using System.IO;
     AUTHOR: LuRRE
 
     DESCRIPTION:
-        Class containing different Print methods. 
+        Class containing Print methods. 
 
 
     FIELDS:
@@ -30,12 +30,9 @@ namespace EZpack
         {
             this._totalSize = size;
         }
-
         public void PrintExtracted(int filesExtracted, int archivesExtracted)
         {
-            Console.WriteLine("{0} file(s) in {1} archive(s) extracted.", filesExtracted, archivesExtracted);
-            Console.ReadLine();
-
+            Console.WriteLine("\n{0} file(s) in {1} archive(s) extracted.", filesExtracted, archivesExtracted);
         }
         public double GetSize(string[] files)
         {
@@ -62,6 +59,21 @@ namespace EZpack
             Console.WriteLine(size);
         }
 
+        public void PrintSize(double tempSize)
+        {
+            //Formatting bytesize to correct suffix.
+            string size = "0 Bytes";
+            if (tempSize >= 1073741824.0)
+                size = String.Format("{0:##.##}", tempSize / 1073741824.0) + " GB";
+            else if (tempSize >= 1048576.0)
+                size = String.Format("{0:##.##}", tempSize / 1048576.0) + " MB";
+            else if (tempSize >= 1024.0)
+                size = String.Format("{0:##.##}", tempSize / 1024.0) + " KB";
+            else if (tempSize > 0 && tempSize < 1024.0)
+                size = tempSize.ToString() + " Bytes";
+            Console.WriteLine(size);
+        }
+
         public void PrintExcluded(string[] excluded)
         {
             if (excluded.Length == 0) return;
@@ -70,6 +82,7 @@ namespace EZpack
             {
                 Console.WriteLine(item);
             }
+            Console.WriteLine("Valid extensions: .zip, .rar");
         }
 
         public void PrintExtracting(string file)

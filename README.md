@@ -1,37 +1,40 @@
 # ezpack
 Drag &amp; Drop console app for decompressing files.  
-A beginners learning project, using SharpCompress.
+A beginners learning project, using SharpCompress by Adamhathcock.
 
 ## Todo
 
-* Command-line input post startup.
+* Rewrite Displayed Results. Size, text formatting. (0.1.6)
 * Progress tracking.
 * ExceptionHandlers.
-* Port to Async with events.
-* GUI.
-* Extraction queue.(Fixing simultaneous extracting.)
+* Port to Async with events. (0.2.0)
+* GUI. (0.3.0)
 
 ## Changelog
    
 ### Known issues
-* Simultaneous rar and zip extraction not working.
+* Incorrect results displayed when mixing zip and invalid files.
 
+### 0.1.5
+* Add - Command-line input post startup.
+* Add - Extraction queue. (Priority = Rar)
+* Fix - Extraction text formatting.
 
 ### 0.1.4
-* Corrupt files throw an exception and exits without crashing.
-* Valid extensions are no longer case sensitive.
-* Fixed printsize inconsistency.
+* Add - Corrupt files throw an exception and exits instead of crashing.
+* Fix - Valid extensions are no longer case sensitive.
+* Fix - Size calculations inconsistent.
 
 ### 0.1.3 
-* Filter and print excluded files.
-* Rar enabled.
+* Add - Filter and print excluded files.
+* Add - Rar support enabled.
 
 ### 0.1.2
-* Added Overwrite permission for Zip extraction(fixed file exists exception).
-* Filtering of input parameters.
-* Changed Projectname.
-* Rar temporary disabled.
+* Add - Overwrite permission for Zip extraction(fixed file exists exception).
+* Add - Filtering of input parameters.
+* Fix - Changed Projectname.
+* Rem - Rar support temporary disabled.
 
 ### 0.1.1
-* Added Multi zip-support.
-* Added support for several multi-volumes. (FileAccess overwrite)
+* Add - Multi zip-support.
+* Add - Support for several multi-volumes. (FileAccess overwrite)

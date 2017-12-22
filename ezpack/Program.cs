@@ -19,15 +19,13 @@ namespace EZpack
 {
     internal class Program
     {
-        
-
         static void Main(string[] args)
         {
-            Console.WriteLine("EZpack by LuRRE\n");
-            var init = new FileOperations();            
-            init.CheckInput(args);
-            init.ValidateFiles(args);
-            init.DetermineExtract(args);
+            Console.WriteLine("EZpack by LuRRE\n===============\n");
+            var init = new FileOperations();
+            init.VerifyInput(args);
+            init.ValidateFiles(init.VerifiedArgs);
+            init.DetermineExtract(init.VerifiedArgs);
         }
     }
 }

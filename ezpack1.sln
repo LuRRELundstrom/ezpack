@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZpack", "ezpack\EZpack.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB561DD2-EEFF-48A4-A694-7CEFD38CC40A}"
 	ProjectSection(SolutionItems) = preProject
+		PseudoCode.md = PseudoCode.md
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -25,11 +26,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_AssemblyInfoFilename = ezpack\Properties\AssemblyInfo.cs
-		BuildVersion_UpdateAssemblyVersion = True
-		BuildVersion_BuildVersioningStyle = None.None.Increment.None
-		BuildVersion_BuildAction = Build
-		BuildVersion_StartDate = 2017/11/24
 		SolutionGuid = {6595D397-D069-4219-AA9B-3106370F045A}
+		BuildVersion_StartDate = 2017/11/24
+		BuildVersion_BuildAction = Build
+		BuildVersion_BuildVersioningStyle = None.None.Increment.None
+		BuildVersion_UpdateAssemblyVersion = True
+		BuildVersion_AssemblyInfoFilename = ezpack\Properties\AssemblyInfo.cs
 	EndGlobalSection
 EndGlobal

@@ -47,29 +47,34 @@ namespace EZpack
         private string[] ValidZip { get; set; }
         private ArchiveExtension ArchiveExtension { get; set; }
         private string[] ExcludedFiles { get; set; }
-        private string[] Args { get; set; }
+        public string[] VerifiedArgs { get; set; }
 
-
-        public string CheckInput(string[] args)
+        //Checking for argument inputs.
+        public string VerifyInput(string[] args)
         {
-            //Nullcheck
-            //Todo Fix commandline input, pass arguments to processing.
+            //Args already parsed. Nullcheck.
             if (args.Length > 0 && args.All(File.Exists))
             {
+                VerifiedArgs = args;
                 TempParent = Directory.GetParent(args[0]).Name;
                 return TempParent;
             }
+
+            //Args not parsed. Nullcheck.
             Console.WriteLine("No input found.\nDrag and drop files onto ezpack.exe");
-            var list = new List<string>
+            var list = new List<string> { Console.ReadLine() };
+            VerifiedArgs = list.ToArray();
+
+            if (VerifiedArgs.Length > 0 && VerifiedArgs.All(File.Exists))
             {
-                Console.ReadLine()
-            };
-            Args = list.ToArray();
-            TempParent = Directory.GetParent(args[0]).Name;
-            return TempParent;
-            
+                TempParent = Directory.GetParent(VerifiedArgs[0]).Name;
+                return TempParent;
+            }
+            System.Environment.Exit(0);
+            return null;
         }
-        //Extracting .ZIP with overwrite permission
+        
+        //Extracting .ZIP with overwrite permission.
         public void Unzip(string[] zipFiles)
         {
             var helper = new PrintOperations(TotalSize);
@@ -92,10 +97,9 @@ namespace EZpack
                 }
                 ArchivesExtracted++;
             }
-            helper.PrintExtracted(FilesExtracted, ArchivesExtracted);
         }
 
-        //Extracting .RAR with overwrite permission
+        //Extracting .RAR with overwrite permission.
         public void Unrar(string[] rarFiles)
         {
             var helper = new PrintOperations();
@@ -114,21 +118,20 @@ namespace EZpack
                 }
                 ArchivesExtracted++;
             }
-            helper.PrintExtracted(FilesExtracted, ArchivesExtracted);
         }
 
-        //Sort files into string arrays of valid extensions with
+        //Sort files into string arrays of valid extensions.
         public void ValidateFiles(string[] args)
         {
             ValidRar = Array.FindAll(args, f => string.Equals(Path.GetExtension(f), ".rar", StringComparison.OrdinalIgnoreCase) ||
                                                 string.Equals(Path.GetExtension(f), ".r00", StringComparison.OrdinalIgnoreCase));
             ValidZip = Array.FindAll(args, f => string.Equals(Path.GetExtension(f), ".zip", StringComparison.OrdinalIgnoreCase));
 
-            ExcludedFiles = Array.FindAll(args, f => !string.Equals(Path.GetExtension(f), ".zip", StringComparison.OrdinalIgnoreCase) ||
-                                                     !string.Equals(Path.GetExtension(f), ".r00", StringComparison.OrdinalIgnoreCase) ||
+            ExcludedFiles = Array.FindAll(args, f => !string.Equals(Path.GetExtension(f), ".zip", StringComparison.OrdinalIgnoreCase) &&
+                                                     !string.Equals(Path.GetExtension(f), ".r00", StringComparison.OrdinalIgnoreCase) &&
                                                      !string.Equals(Path.GetExtension(f), ".rar", StringComparison.OrdinalIgnoreCase));
 
-            /*Alternative solutions
+            /*Alternative LINQ Solution
            
                 1.   var ValidRar = (from item in args
                                 where string.Equals(Path.GetExtension(f), ".zip", StringComparison.OrdinalIgnoreCase) || 
@@ -139,49 +142,37 @@ namespace EZpack
                     .Where(item => Path.GetExtension(item) == ".rar" || Path.GetExtension(item) == ".r00")
                     .ToArray();
             */
-
-            //Setting extraction state
-            if (ValidZip.Length > 0)
-            {
-                ArchiveExtension = ArchiveExtension.Zip;
-            }
-            else if (ValidRar.Length > 0)
-            {
-                ArchiveExtension = ArchiveExtension.Rar;
-            }
-            else
-            {
-                ArchiveExtension = ArchiveExtension.Invalid;
-            }
         }
 
-        //Determines which method to use for extraction
+        //Determines which method to use for extraction.
         public void DetermineExtract(string[] args)
         {
             try
             {
-                var helper = new PrintOperations(TotalSize);
-                switch (ArchiveExtension)
+                var helper = new PrintOperations();
+                TotalSize = helper.GetSize(ValidRar) + helper.GetSize(ValidZip);
+                helper.PrintSize(TotalSize);
+                
+                //Setting extraction state
+                if (ValidRar.Length > 0)
                 {
-                    case ArchiveExtension.Rar:
-                        helper.GetSize(ValidRar);
-                        helper.PrintSize();
-                        Unrar(ValidRar);
-                        helper.PrintExcluded(ExcludedFiles);
-                        break;
-                    case ArchiveExtension.Zip:
-                        helper.GetSize(ValidZip);
-                        helper.PrintSize();
-                        Unzip(ValidZip);
-                        helper.PrintExcluded(ExcludedFiles);
-                        break;
-                    case ArchiveExtension.Invalid:
-                        Console.WriteLine("Valid extensions: .zip, .rar");
-                        helper.PrintExcluded(ExcludedFiles);
-                        Console.ReadLine();
-                        //throw new FileNotFoundException("Error: File extension must be .zip or .rar");
-                        break;
+                    helper.GetSize(ValidRar);
+                    Unrar(ValidRar);
                 }
+                if (ValidZip.Length > 0)
+                {
+                    helper.GetSize(ValidZip);
+                    Unzip(ValidZip);
+                }
+                else
+                {
+                    
+                    helper.PrintExcluded(ExcludedFiles);
+                    Console.ReadLine();
+                    //throw new filenotfoundexception;
+                }
+                helper.PrintExtracted(FilesExtracted, ArchivesExtracted);
+
             }
             catch (InvalidDataException e)
             {
@@ -191,6 +182,7 @@ namespace EZpack
 
             finally
             {
+                Console.ReadLine();
                 System.Environment.Exit(0);
             }
         }

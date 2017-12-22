@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<addon name="FS Instructor Panel 200X" guid="bb0268a8-8a56-44af-acf4-f8d636e170ba" cycle="1701" revision="1">
+  <mapping simulator="TOOL">
+    <directory name=".">
+      <files destination="cycle_info.txt" source="46cb13a9-78bc-4a3f-ade5-56a775050964" />
+      <files destination="navigraph1.txt" source="2a5e17fc-dfdb-4dba-a15c-5797c24810b0" />
+      <files destination="navigraph2.txt" source="40ef1c77-8b48-465f-a47d-f1aea9e81044" />
+    </directory>
+  </mapping>
+  <mapping simulator="USER">
+    <directory name=".">
+      <files destination="cycle_info.txt" source="46cb13a9-78bc-4a3f-ade5-56a775050964" />
+      <files destination="navigraph1.txt" source="2a5e17fc-dfdb-4dba-a15c-5797c24810b0" />
+      <files destination="navigraph2.txt" source="40ef1c77-8b48-465f-a47d-f1aea9e81044" />
+    </directory>
+  </mapping>
+</addon>
